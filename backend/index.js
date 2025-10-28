@@ -1,37 +1,34 @@
 // server.js
 import express from 'express';
-import db from './mongoFunctions.js';
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+dotenv.config();
+mongoose.set("strictQuery", false);
+
+// Define the database URL to connect to.
+const mongoDB = process.env.ATLAS_URI;
 
 const app = express();
 const PORT = 3000;
 
-// To define the sample data 
 
+// mongo db connection 
 
-
-app.get('/api/getUsers',
-    async (req, res) => {
-        let collection = db.collection("users");
-        let results = await collection.find({})
-            .limit(50)
-            .toArray();
-        res.send(results).status(200);
+mongoose.connect(process.env.ATLAS_URI)
+    .then((result) => {
+        console.log('connected to Mongodb');
+    }).catch((err) => {
+        console.error(err);
     });
 
 
-// app.get('/api/books/:id',
-//     (req, res) => {
-//         const id =
-//             parseInt(req.params.id);
-//         const book =
-//             books.find(book => book.id === id);
-//         if (book) {
-//             res.json(book);
-//         } else {
-//             res.status(404)
-//                 .json({ message: 'Book not found' });
-//         }
-//     });
+app.get('/api/helloWorld',
+    async (req, res) => {
+        res.send("Hello World !!!").status(200);
+    });
+
+
+
 
 app.listen(PORT,
     () => {
