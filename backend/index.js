@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import {userRoutes} from './src/routes/userRoutes.js';
+import {userRoutes} from './src/routes/userAuthRoutes.js';
 
 dotenv.config();
 mongoose.set("strictQuery", false);
@@ -11,7 +11,7 @@ import verifyToken from './src/middleware/auth.js';
 const app = express();
 app.use(express.json());
 
-app.use('/users', userRoutes);
+app.use('/user', userRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.ATLAS_URI)
