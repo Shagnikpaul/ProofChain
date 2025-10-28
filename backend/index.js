@@ -1,36 +1,37 @@
-// server.js
 import express from 'express';
-import dotenv from "dotenv";
-import mongoose from "mongoose";
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
 dotenv.config();
 mongoose.set("strictQuery", false);
 
-// Define the database URL to connect to.
-const mongoDB = process.env.ATLAS_URI;
+import verifyToken from './src/middleware/auth.js';
+import loginRoute from './src/routes/login.js'; 
 
 const app = express();
-const PORT = 3000;
+app.use(express.json());
 
+// ✅ Register the /login route
+app.use('/', loginRoute);  // now you can call POST /login
 
-// mongo db connection 
-
+// MongoDB connection
 mongoose.connect(process.env.ATLAS_URI)
-    .then((result) => {
-        console.log('connected to Mongodb');
-    }).catch((err) => {
-        console.error(err);
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB Connection Error:', err));
+
+app.get('/public', (req, res) => {
+    res.json({ message: 'This is public' });
+});
+
+app.get('/protected', verifyToken, (req, res) => {
+    res.json({
+        message: 'This is protected',
+        userId: req.userId,
+        email: req.userEmail
     });
+});
 
-
-app.get('/api/helloWorld',
-    async (req, res) => {
-        res.send("Hello World !!!").status(200);
-    });
-
-
-
-
-app.listen(PORT,
-    () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

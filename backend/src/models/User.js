@@ -9,3 +9,5 @@ const userSchema = new mongoose.Schema({
 
 // Export the model for use in controllers
 module.exports = mongoose.model('User', userSchema);
+
+
