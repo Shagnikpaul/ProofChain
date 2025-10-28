@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { use } = require('react');
 
 // Define the schema for a user
-const userSchema = new mongoose.Schema({
+const billSchema = new mongoose.Schema({
     product_name: { type: String, required: true },       // Name is required
     bill_photo_url: { type: String, required: true },     // Email is required and unique
     warranty_expiration_date: { type: Date},
@@ -13,4 +13,4 @@ const userSchema = new mongoose.Schema({
 });
 
 // Export the model for use in controllers
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Bill', billSchema);
