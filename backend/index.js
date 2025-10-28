@@ -1,18 +1,17 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import {userRoutes} from './src/routes/userRoutes.js';
 
 dotenv.config();
 mongoose.set("strictQuery", false);
 
 import verifyToken from './src/middleware/auth.js';
-import loginRoute from './src/routes/login.js'; 
 
 const app = express();
 app.use(express.json());
 
-// ✅ Register the /login route
-app.use('/', loginRoute);  // now you can call POST /login
+app.use('/users', userRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.ATLAS_URI)
