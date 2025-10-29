@@ -25,10 +25,10 @@ const loginUser = async (req, res) => {
 
 
 const registerUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { username ,email, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
+    if (!username || !email || !password ) {
+        return res.status(400).json({ error: 'Email, password and username are required' });
     }
 
     const { data, error } = await supabase.auth.signUp({
@@ -41,8 +41,8 @@ const registerUser = async (req, res) => {
     }
     else {
         try {
-            const newUser = new User({ name: 'Default', email: email })
-            newUser.save()
+            const newUser = new User({ name: username, email: email, uuid: data.user.id });
+            await newUser.save()
         }
         catch (err) {
             console.log("Error while saving new user in MongoDB");
