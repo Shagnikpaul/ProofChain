@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import supabase from '../utils/supabase.js';
+
+import User from '../models/userModel.js';
 dotenv.config();
 
 const loginUser = async (req, res) => {
@@ -38,6 +40,16 @@ const registerUser = async (req, res) => {
         res.status(error.status).json({ "message": "Error in authentication part could not sign up", "error_message": error.message })
     }
     else {
+        try {
+            const newUser = new User({ name: 'Default', email: email })
+            newUser.save()
+        }
+        catch (err) {
+            console.log("Error while saving new user in MongoDB");
+            return res.status(500).json({ "error": "Cant save to mongoDB" });
+
+        }
+
         res.status(200).json({ "message": "successfully signed up user", data: data.session })
     }
 
