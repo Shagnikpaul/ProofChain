@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import {userRoutes} from './src/routes/userAuthRoutes.js';
+import {userProfileRoutes} from './src/routes/userProfileRoutes.js';
 
 dotenv.config();
 mongoose.set("strictQuery", false);
@@ -12,8 +13,8 @@ const app = express();
 app.use(express.json());
 
 app.use('/user', userRoutes);
+app.use('/profile', userProfileRoutes);
 
-// MongoDB connection
 mongoose.connect(process.env.ATLAS_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB Connection Error:', err));

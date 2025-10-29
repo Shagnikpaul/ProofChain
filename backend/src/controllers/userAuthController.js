@@ -2,9 +2,6 @@ import dotenv from 'dotenv';
 import supabase from '../utils/supabase.js';
 dotenv.config();
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
-
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
