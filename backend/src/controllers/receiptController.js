@@ -1,17 +1,16 @@
-import Bill from '../models/Bill.js';
+import receipt from '../models/receipt.js';
 
 const uploadBill = async (req, res) => {
-    uuid = req.params.uuid;
     const { product_name, bill_photo_url, warranty_expiration_date, purchase_date, keywords } = req.body;
     if (!product_name || !bill_photo_url ) {
         return res.status(400).json({ error: 'Product name, bill photo URL are required' });
     }
     try{
-        const newBill = new Bill({ product_name, 
+        const newBill = new receipt({ product_name, 
                                     bill_photo_url, 
-                                    warranty_expiration_date:new Date('2025-12-31') || warranty_expiration_date, 
-                                    purchase_date: new Date('2025-10-29'), 
-                                    uuid, 
+                                    warranty_expiration_date: warranty_expiration_date ? new Date(warranty_expiration_date) : new Date('2025-12-31'),
+                                    purchase_date: purchase_date ? new Date(purchase_date) : new Date('2025-10-29'), 
+                                    uuid: req.userId, 
                                     keywords 
                                 });
         await newBill.save();
@@ -23,11 +22,16 @@ const uploadBill = async (req, res) => {
     }   
 };
 
-const searchBill = async (req, res) => {
-    product_name = req.body.product_name;
+const searchBills = async (req, res) => {
+    const {product_name} = req.body;
+    const user_id = req.userId;
     try{
-        const bills = await Bill.find({ product_name: product_name }); 
+        const bills = await receipt.find({ uuid: user_id, product_name});  
         res.status(201).json({ message: 'This is your bill', bill: bills });
+
+        if (bills.length === 0) {
+         return res.status(404).json({ message: "No bills found for this product" });
+        }
     }
     catch(err){
         console.error('Error searching bill:', err);
@@ -37,10 +41,15 @@ const searchBill = async (req, res) => {
 
 
 const deleteBill = async (req, res) => {
-    product_name = req.body.product_name;
+    const {product_name} = req.body;
+    const user_id = req.userId;
     try{
-        const bills = await Bill.findOneAndDelete({ product_name: product_name }); 
+        const bills = await receipt.findOneAndDelete({ uuid:user_id, product_name}); 
         res.status(201).json({ message: 'Bill deleted successfully'});
+
+        if(!bills){
+         return res.status(404).json({ message: "No bills found for this product" });
+        }
     }
     catch(err){
         console.error('Error searching bill:', err);
@@ -49,11 +58,13 @@ const deleteBill = async (req, res) => {
 }
 
 const editBill = async (req, res) => {
-    product_name = req.body.product_name;
+    const {product_name} = req.body;
+    const user_id = req.userId;
+
     const updatedData = req.body;
     try {
-        const updatedBill = await User.findOneAndUpdate(
-            { product_name: product_name },       
+        const updatedBill = await receipt.findOneAndUpdate(
+            { uuid: user_id,product_name: product_name },       
             updatedData             
         );
 
@@ -67,5 +78,5 @@ const editBill = async (req, res) => {
     } 
 }
 
-export { uploadBill, searchBill, deleteBill, editBill };
+export { uploadBill, searchBills, deleteBill, editBill };
 

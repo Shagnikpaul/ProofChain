@@ -6,10 +6,10 @@ const billSchema = new mongoose.Schema({
     bill_photo_url: { type: String, required: true },     
     warranty_expiration_date: { type: Date},
     purchase_date: { type: Date },
-    user_id: { type: String, required: true },
+    uuid: { type: String, required: true },
     keywords: { type: [String] }
 });
 
 // Export the model for use in controllers
-const Bill = mongoose.model('Bill', billSchema);
-export default Bill;
+const receipt = mongoose.model('receipt', billSchema);
+export default receipt;
