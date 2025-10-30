@@ -7,8 +7,8 @@ import verifyToken from '../middleware/auth.js';
 const router = express.Router();
 
 // Map URLs to controller functions
-router.post('/edit',verifyToken, editUser);
-router.post('/delete',verifyToken, deleteUser)
+router.post('/edit/:uuid',verifyToken, editUser);
+router.post('/delete/:uuid',verifyToken, deleteUser)
 
 
 export { router as userProfileRoutes };
