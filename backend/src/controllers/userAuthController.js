@@ -25,9 +25,9 @@ const loginUser = async (req, res) => {
 
 
 const registerUser = async (req, res) => {
-    const { username ,email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    if (!username || !email || !password ) {
+    if (!username || !email || !password) {
         return res.status(400).json({ error: 'Email, password and username are required' });
     }
 
@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
     })
 
     if (error) {
-        res.status(error.status).json({ "message": "Error in authentication part could not sign up", "error_message": error.message })
+        res.json({ "message": "Error in authentication part could not sign up", "error_message": error.message })
     }
     else {
         try {
